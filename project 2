@@ -1,4 +1,38 @@
 # first_p_in_github
-print('Hello, this is will help you to check something')
-print('sss')
-print('ddd')
+import tkinter as tk
+win  = tk.Tk()
+win.geometry('400x600+500+0')
+#win.maxsize(800,900)
+#win.minsize(200,300)
+ph = tk.PhotoImage(file = 'C:/Users/Asus/OneDrive/Рабочий стол/pic.jpg')
+win.iconphoto(False, ph)#for phone picture
+win.wm_attributes('-alpha',0.9)
+count = 0
+def counter():
+    global count
+    count+=1
+    btn['text'] = f'counter: {count}'
+btn = tk.Button(win,text = f'counter: {count}',
+                command = counter,
+                bg = 'yellow',
+                activebackground = 'green',
+                activeforeground = 'white',
+                font = ('Times New Roman',14,'bold'),
+                fg = 'green',
+                anchor =  'sw'
+                )
+colors = ['yellow','green','black','white','blue']
+col = 0
+def com():
+    global  col
+    win['bg'] = colors[col]
+    if col ==4:
+        col  = 0
+    else:
+        col+=1
+btn.pack()
+btn2 = tk.Button(win,text = 'Hello',
+                 command = com)
+btn2.pack()
+
+win.mainloop()

@@ -1,0 +1,378 @@
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns
+import math
+import csv
+WWW = ['World','Asia','Europe']
+
+s = df['location'][0]
+original_date = ''
+countries = []
+count = 0
+o_date = []
+big_date = 0  # first: Argentina
+for i in df['location']:
+  if s==i:
+    o_date.append(df['date'][count])
+    if len(o_date)>len(original_date):
+      original_date = o_date
+      big_date = df['location'][count]
+  else:
+    o_date = []
+    s = i
+  count += 1
+c = 0
+for i in original_date:
+  if i == '2020-02-22':
+    break
+  c+=1
+original_date = original_date[c:]
+#<<<<<<<<
+name_of_country = df['location'][0]
+for_statistic = {}
+countries = [name_of_country]
+count=0
+for i in df['location']:
+  if name_of_country==i:
+    if df['date'][count]==original_date[-1]:
+      for_statistic[i]=df['total_cases'][count]
+  else:
+    name_of_country=i
+    countries.append(name_of_country)
+  count+=1
+
+def to_pd3(dictionary,d2):
+  x,y,z = [],[],[]
+  for i in dictionary:
+    x.append(i)
+    y.append(dictionary[i])
+  for i in d2:
+    z.append(d2[i])
+  #for_plotting_pd = pd.DataFrame(y,x)
+  data = {'Time': x, 'cases': y, 'diths':z}
+  dat = pd.DataFrame.from_dict(data)
+  return dat
+#to_pd3(determinate('
+def find_nomer(a):
+  c = 0
+  for i in df['location']:
+    if i == a:
+      break
+    c+=1
+  return c
+#<<<<
+def determinate(b):# original data boiynsha malimetterdi ornalastyru 777
+  da = []
+  g = 0
+  dt = []
+  db = []
+  for i in df['location']:
+    if i == b:
+      dt.append(df['date'][g])
+      da.append(abs(df['new_cases'][g]))
+      db.append(abs(df['new_deaths'][g]))
+    g+=1
+  c = 0
+  dd = {}
+  dith = {}
+  for i in dt:
+    if i==original_date[0]:
+      dt = dt[c:]
+      da = da[c:]
+      db = db[c:]
+      break
+    c+=1
+  for i in range(len(dt)):
+    dd[dt[i]]=da[i]
+    dith[dt[i]] = db[i]
+  return [dd,dith] # kundegi malimetter
+#<<<<
+def time(a):               # for original 1111 Kiris memlekettin aty boiynsha malimetterdi tolyqtyru \by 17:27 22.04.2021 777
+  c = find_nomer(a)
+  g = {}
+  g2 = {}
+  count = 0
+  dd = determinate(a)[0]
+  dith = determinate(a)[1]
+  x = [w for w in dd]
+  x2 = [w for w in dith]
+  for i in original_date:
+    try:
+      if i == x[count]:
+        g[i] = dd[x[count]]
+        count+=1
+      else:
+        g[i] = 0
+    except IndexError:
+      g[i] = 0
+  count = 0
+  for i in original_date:
+    try:
+      if i == x2[count]:
+        g2[i] = dith[x2[count]]
+        count+=1
+      else:
+        g2[i] = 0
+    except IndexError:
+      g2[i] = 0
+  return g,g2
+  #<<<<<<<<<<<<
+count = 0
+d = 0
+c = 0
+for_s_with_date = {}
+country_2 = countries[0]
+h = 0
+whole_dd = {}
+whole_dt = {}
+for i in countries:
+  if i in WWW:
+    pass
+  else:
+    whole_dd[i] = time(i)[0]
+    whole_dt[i] = time(i)[1]
+#<<<<<<<<<<
+#<<<<<<<
+ggg = {}
+ggg1 = {}
+for data in original_date:
+  t = 0
+  c = 0
+  for i in whole_dd:
+    t+=whole_dd[i][data]
+    c+=whole_dt[i][data]
+  ggg[data]=t
+  ggg1[data] = c
+  #<<<<<<<<<
+  try:#>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    with open('file_only_data_and_cases.csv', 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=original_date)
+        writer.writeheader() # for taqyryp
+        for i in whole_dd:
+          writer.writerow(whole_dd[i])
+  except AttributeError:
+    print("I/O error")
+file_only_d = 'file_only_data_and_cases.csv'
+
+try:#>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    with open('file_only_data_and_case.csv', 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=original_date)
+        writer.writeheader() # for taqyryp
+        for i in whole_dt:
+          writer.writerow(whole_dt[i])
+except AttributeError:
+    print("I/O error")
+file_only_dt = 'file_only_data_and_case.csv'
+#<<<<<<<<<<
+
+g = pd.read_csv(file_only_d)#>>>>>>>>>>>>>>>>>>>>>>>..
+gt = pd.read_csv(file_only_dt)
+h = 0
+x = 0
+#dv = {}
+s,f,dr = [],[],[]
+for i in original_date: # data
+  h+=g[i]
+  x+=gt[i]
+  #dv[i] = sum(g[i])  dictionaryga ainaldyru ushin
+  s.append(i)
+  f.append(sum(g[i]))
+  dr.append(sum(gt[i]))
+  #print(g[i])# bir eldin bukil auyrgandarynyn sany
+h # = ar memlekette bukil auyrgandar sany .Series
+x # bukil memelekettegi qaitys bolgandar sany
+for_plot_whole_worldwide_cases = pd.DataFrame(f,s)# bukil alem boiynsha kundelikti auyrgandar sany 777
+for_plot_whole_worldwide_dcases = pd.DataFrame(dr,s)#bukil alem boiynsha kundelikti qaitys bolgandar sany
+#<<<<<<<<<
+
+each_c_amount = []#>>>>>>>>>>>>>>>>>>>>>>>>>>>.2>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+each_c = []
+c = 0
+havnot = []
+for i in range(len(h)):
+  if h[i] == 0:  # bizge auyrmagan memleket kerek emes
+    havnot.append(countries[i])
+  else:
+    each_c.append(countries[i])
+    each_c_amount.append(h[i])
+
+for_plot_each_worldwide_cases = pd.DataFrame(each_c,each_c_amount)
+
+#<<<<<<<<<<<<<
+
+def for_ggg(a):
+  gg1 = {}
+  if str(a)[0].isalpha():
+    a = int(a[1:])
+    r = len(ggg)-2-a
+    c = 0
+    for i in ggg:
+      if c>=r:
+        gg1[i] = ggg[i]
+      c+=1
+  else:
+    a = int(a)
+    c = 0
+    for i in ggg:
+      if c%a==0:
+        gg1[i] = ggg[i]
+      c+=1
+  return gg1
+#for_ggg('30')
+
+def for_ggg1(a):
+  g1 = {}
+  if str(a)[0].isalpha():
+    a = int(a[1:])
+    r = len(ggg1)-2-a
+    c = 0
+    for i in ggg1:
+      if c>=r:
+        g1[i] = ggg1[i]
+      c+=1
+  else:
+    a = int(a)
+    c = 0
+    for i in ggg1:
+      if c%a==0:
+        g1[i] = ggg1[i]
+      c+=1
+  return g1
+
+  #<<<<<<<<<<<<
+
+def jiylyk(a):           #baza for fix date   #top fixer >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>...777
+  dict_for_plot = {}
+  for i in whole_dd:
+    t = 0
+    for_dict = {}
+    s = whole_dd[i]                      #s = ar memlekettin derekteri
+    for w in s:
+      if (str(a)[0]).isalpha():
+        r = len(whole_dd[i])-int(a[1:])-2 #t ushin
+        if t>=r:
+          for_dict[w]=s[w]
+        t+=1
+      else:
+        a = int(a)
+        if t%a==0:            #i = memleket attry
+            for_dict[w]=s[w]  #w = '202y-as-sd'
+        t+=1
+      dict_for_plot[i]=for_dict
+  dict_for_plot1 = {}
+  for i in whole_dt:
+    t = 0
+    for_dict = {}
+    s = whole_dt[i]                      #s = ar memlekettin derekteri
+    for w in s:
+      if (str(a)[0]).isalpha():
+        r = len(whole_dt[i])-int(a[1:])-2 #t ushin
+        if t>=r:
+          for_dict[w]=s[w]
+        t+=1
+      else:
+        a = int(a)
+        if t%a==0:            #i = memleket attry
+            for_dict[w]=s[w]  #w = '202y-as-sd'
+        t+=1
+      dict_for_plot1[i]=for_dict
+  return dict_for_plot,dict_for_plot1
+
+#<<<<<
+
+import matplotlib.pyplot as plt
+import numpy as np
+def plot_each_country(nae, plot_by_data, kind_cases):
+  y = 0
+  while y == 0:
+    if nae in havnot:
+      nae = input('Bizde bul memleket turaly aqparat joq, basqa eldi engiz: ')
+      y=0
+    else:
+      if nae == 'Whole World':
+        y = 1
+        for_plotting_pd = for_ggg(plot_by_data)
+        for_plotting_pd1 = for_ggg1(plot_by_data)
+        break
+      try:
+        for_plotting_pd = jiylyk(plot_by_data)[0][nae]
+        for_plotting_pd1 = jiylyk(plot_by_data)[1][nae]     
+        y = 1
+      except KeyError:
+        nae = input('name is not right, place enter again: ')
+  print('Place, whait for 15 secund!')
+  if kind_cases=='diths':
+    fff = for_plotting_pd1
+  elif kind_cases=='cases':
+    fff = for_plotting_pd
+  else:
+    fff = [for_plotting_pd,for_plotting_pd1]
+  return plotting(fff,plot_by_data)
+  
+  
+  def plotting(for_plotting_pd,plot_by_data):
+  x = [i for i in for_plotting_pd]
+  y = [for_plotting_pd[i] for i in x]
+  d = 0
+  if str(plot_by_data)[0].isalpha():
+    a = int(plot_by_data[1:])
+    d = 1
+  else:
+    a = int(plot_by_data)
+  if a==30:
+    plotting30(x,y,for_plotting_pd)
+  elif a==7:
+    plotting7(d,x,y,for_plotting_pd)
+  else:
+    plottingwhole(for_plotting_pd)
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+def plottingwhole(a):
+  plt.figure(figsize=(18,8))
+  plt.grid(True, color = 'b',alpha = 0.2)
+  sns.lineplot(data=a, palette="tab10", linewidth=2.5);
+
+def neww(for_plotting_pd):
+  d = []
+  g = []
+  s = {}
+  for i in for_plotting_pd:
+      d.append(i)
+      g.append(for_plotting_pd[i])
+  s['date'] = d
+  s['cases'] = g
+  new = pd.DataFrame.from_dict(s)
+  return new
+
+def plotting7(d,x,y,for_plotting_pd):
+  sns.set_theme(style="white", context="talk")
+  f, (ax1) = plt.subplots(1, figsize=(18,8), sharex=True)
+  sns.barplot(x=x, y=y, palette="viridis", ax=ax1)
+  ax1.axhline(0, color="k", clip_on=False)
+  ax1.set_ylabel("Sequential")
+  if d == 0:
+    ax1.set_xticklabels(neww(for_plotting_pd)['date'].unique().astype(str), rotation='vertical')#TTTTTT
+  sns.despine(bottom=True)
+  plt.setp(f.axes, yticks=[])
+  plt.tight_layout(h_pad=2)
+
+def plotting30(x,y,a):
+  fig = plt.figure(figsize=(18,8))
+  ax = fig.add_subplot(1,1,1)
+  ax.set_xticklabels(neww(a)['date'],rotation=35,ha='right')
+  plt.stem(x,y)
+  plt.show();
+
+  if d == 0:
+    ax1.set_xticklabels(neww(for_plotting_pd)['date'].unique().astype(str), rotation='vertical')#TTTTTT
+  sns.despine(bottom=True)
+  #plt.setp(f.axes, yticks=[])
+  plt.tight_layout(h_pad=2)
+  plt.show();
+  
+where = input('name_of_country/world: ')
+when = input('mounthly/last_week/last_month/all time :')
+kind = input('for see graphic of cases enter 1 else 2(for see dith cases): ')
+d = ('cases' if kind=='1' else 'diths')
+plot_each_country(where, when,d)
